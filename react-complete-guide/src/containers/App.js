@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import Person from './Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
+
+  constructor(props){
+    super(props);
+    console.log('app.js constructor called');
+  }
 
   state= {
     persons: [
@@ -14,6 +20,11 @@ class App extends Component {
     showPersons: false
   }
 
+  static getDerivedStateFromProps(props, state){
+
+    console.log('getderivedstatefromprops', props);
+    return state;
+  }
   switchNameHandler = (newName) => {
     console.log('Was clicked');
     this.setState({
@@ -50,51 +61,32 @@ class App extends Component {
 
   render() {
 
-    const style = {
-      backgroundColor: 'white', 
-      font: 'inherit', 
-      border: '1px solid blue', 
-      padding: '8px', 
-      cursor: 'pointer'
-
-    };
+    
     let persons=null;
 
     if (this.state.showPersons){
       persons=(
         <div>
-          {
-            this.state.persons.map((person, index) => {
-              return (
-                <Person 
-                  key={person.id}
-                  name={person.name} 
-                  age={person.age} 
-                  click={this.deletePersonHandler.bind(this, index)}
-                  changed={(event)=> {this.nameChangedHandler(event, person.id);}}
-                >
-                  My Hobbies: Racing
-                </Person>
-              );
-            })
-          }
+          <Persons 
+            persons={this.state.persons} 
+            clicked={this.deletePersonHandler}
+            changed={this.nameChangedHandler}
+          />
         </div>
       );
-
     }
     
 
+
     return (
-      <div className="App">
-        <h1>Hi, I'm a react App</h1>
-        <p>this is really working!</p>
-        <button 
-          onClick={this.togglePersonsHandler}
-          style={style}
-        >
-          Toggle Persons
-        </button>
-        {persons}
+        <div className="App">
+          <Cockpit 
+            title = {this.props.appTitle}
+            persons={this.state.persons} 
+            showPersons={this.state.showPersons}
+            clicked={this.togglePersonsHandler} 
+          />
+          {persons}
         </div>
     );
   }
