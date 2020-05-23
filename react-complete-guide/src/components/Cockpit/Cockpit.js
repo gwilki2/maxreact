@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import Radium from 'radium';
-
+import AuthContext from '../../context/auth-context';
 
 
 const Cockpit = props => {
+
+
+    const toggleBtnRef = useRef(null);
+
+    const authContext = useContext(AuthContext)
+
+    useEffect(() => {
+        console.log('cockpit\'s use affect');
+        toggleBtnRef.current.click();
+    },[])
+
 
     const style = {
         backgroundColor: 'green', 
@@ -13,22 +24,22 @@ const Cockpit = props => {
         padding: '8px', 
         cursor: 'pointer',
         ':hover':  {
-          backgroundColor: 'lightgreen',
-          color:'black'
+            backgroundColor: 'lightgreen',
+            color:'black'
         }
-      };
+    };
 
 
-      if (props.showPersons){
+    if (props.showPersons){
         style.backgroundColor ="red";
         style[':hover'] = {backgroundColor: 'salmon', color:'black'};
-  
-      }
+
+    }
 
     let classes= [];
 
-    if (props.persons.length<=2) {classes.push('red');}
-    if (props.persons.length<=1) {classes.push('bold');}
+    if (props.personsLength<=2) {classes.push('red');}
+    if (props.personsLength<=1) {classes.push('bold');}
 
 
     return (
@@ -40,12 +51,22 @@ const Cockpit = props => {
             <button 
                 onClick={props.clicked}
                 style={style}
+                ref={toggleBtnRef}
+                key="togglebtn"
             >
                 Toggle Persons
             </button>
+            <button 
+                onClick={authContext.login} 
+                key="loginbtn" 
+                style={style} 
+            >
+                Log In
+            </button>
+            
         </div>
     );
 
 }
 
-export default Radium(Cockpit);
+export default React.memo(Radium(Cockpit));
